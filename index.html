@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CGIAR Induction Agent</title>
 <style>
-/* System font fallbacks — no external dependency */
-</style>
-<style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --g1:#033529;--g2:#1a6645;--g3:#4caf7d;--gl:#e8f4ee;
@@ -16,7 +13,6 @@
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
-/* Header */
 .hdr{background:var(--g1);position:relative;overflow:hidden}
 .hdr::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04)}
 .hdr-inner{max-width:920px;margin:0 auto;padding:24px 28px 20px;position:relative;z-index:1}
@@ -25,24 +21,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .hdr-title{font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}
 .hdr-sub{font-size:12px;color:rgba(255,255,255,.5)}
 
-/* Role tabs */
 .tabs{background:var(--g1);border-top:1px solid rgba(255,255,255,.07)}
 .tabs-inner{max-width:920px;margin:0 auto;padding:0 28px;display:flex;gap:2px}
-.tab{padding:10px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab{padding:10px 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap}
 .tab:hover{color:rgba(255,255,255,.8)}
 .tab.on{color:var(--g3);border-bottom-color:var(--g3)}
-#tab-ask.on{color:#f0c96e;border-bottom-color:#f0c96e}
 
-/* Main */
 .main{flex:1;max-width:920px;margin:0 auto;width:100%;padding:20px 28px 32px;display:flex;flex-direction:column;gap:16px}
 
-/* Welcome card */
-.welcome-card{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:18px 22px;display:flex;gap:14px;align-items:flex-start}
+.wc{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:18px 22px;display:flex;gap:14px;align-items:flex-start}
 .wc-icon{width:38px;height:38px;background:var(--gl);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.wc-title{font-family:Georgia,'Times New Roman',serif;font-size:15px;color:var(--g1);margin-bottom:4px}
+.wc-title{font-family:Georgia,'Times New Roman',serif;font-size:15px;color:var(--g1);margin-bottom:4px;font-weight:700}
 .wc-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
 
-/* Walkthrough */
+.contact-bar{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:12px 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.cb-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.cb-btn{display:inline-flex;align-items:center;gap:6px;background:var(--gl);border:1px solid #b8d9c4;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--g1);text-decoration:none;transition:all .15s}
+.cb-btn:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
+.cb-btn.diligent{background:var(--g1);color:#fff;border-color:var(--g1)}
+.cb-btn.diligent:hover{background:var(--g2);border-color:var(--g2)}
+
 .wt{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);overflow:hidden}
 .wt-hdr{background:var(--g1);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
 .wt-title{font-family:Georgia,'Times New Roman',serif;font-size:13px;color:#fff;font-weight:600}
@@ -59,7 +57,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .pill.next{background:#f5f7f6;color:var(--muted);border-color:#e0e8e4}
 .pill.next:hover{border-color:var(--g3);color:var(--g1)}
 
-/* Topics */
 .sec-lbl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .topic{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:5px}
@@ -68,9 +65,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .t-name{font-size:11.5px;font-weight:600;color:var(--g1);line-height:1.3}
 .t-desc{font-size:10px;color:var(--muted);line-height:1.4}
 
-/* Chat */
 .chat{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden}
-.msgs{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:320px;min-height:120px}
+.msgs{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:340px;min-height:120px}
 .msg{display:flex;gap:8px;align-items:flex-start;animation:fi .2s ease}
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .msg.u{flex-direction:row-reverse}
@@ -90,36 +86,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .typing span:nth-child(3){animation-delay:.4s}
 @keyframes bc{0%,60%,100%{transform:none}30%{transform:translateY(-4px)}}
 
-/* Mode toggle */
-.mode-row{display:flex;gap:6px;padding:10px 14px 0}
-.mbtn{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
-.mbtn.on{background:var(--g1);color:#fff;border-color:var(--g1)}
-.mbtn:not(.on){background:var(--gl);color:var(--g1);border-color:#c5ddd0}
-.live-row{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--g3);font-weight:600;padding:4px 14px 0}
-.ldot{width:6px;height:6px;background:var(--g3);border-radius:50%;animation:pulse 1.8s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
-
-/* Source chips */
-.src-row{display:flex;flex-wrap:wrap;margin-top:6px;gap:4px}
-.src{display:inline-flex;align-items:center;gap:3px;background:rgba(3,53,41,.06);border:1px solid #c5ddd0;border-radius:6px;padding:2px 8px;font-size:10px;color:var(--g2);text-decoration:none;transition:all .15s}
-.src:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
-
-/* Suggestions */
-.sugs{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px}
-.sug{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;padding:4px 11px;background:var(--gl);border:1px solid #c5ddd0;border-radius:20px;cursor:pointer;color:var(--g1);transition:all .15s;font-weight:500}
+.sugs{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px}
+.sug{font-size:11px;padding:4px 11px;background:var(--gl);border:1px solid #c5ddd0;border-radius:20px;cursor:pointer;color:var(--g1);transition:all .15s;font-weight:500}
 .sug:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
 
-/* Input */
 .inp-row{border-top:1px solid #e8eded;padding:11px 12px;display:flex;gap:8px;align-items:center;background:#fafcfa}
-.inp{flex:1;border:1px solid #cfd9d4;border-radius:8px;padding:8px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--text);background:#fff;outline:none;transition:border-color .15s}
+.inp{flex:1;border:1px solid #cfd9d4;border-radius:8px;padding:8px 12px;font-size:12.5px;color:var(--text);background:#fff;outline:none;transition:border-color .15s}
 .inp:focus{border-color:var(--g3)}
 .inp::placeholder{color:#aab8b2}
 .send{width:32px;height:32px;background:var(--g1);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
 .send:hover{background:var(--g2)}
 .send svg{width:14px;height:14px;fill:#fff}
-
-/* Error */
-.err{background:#fff3f3;border:1px solid #ffcdd2;border-radius:9px;padding:9px 13px;font-size:12px;color:#c62828;border-bottom-left-radius:3px}
 
 .foot{text-align:center;font-size:10px;color:#aab8b2;padding:9px;border-top:1px solid #edf2ef}
 </style>
@@ -138,34 +115,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
   <div class="tabs-inner">
     <button class="tab on" id="tab-board" onclick="setRole('board')">🌿 CGIAR Board Member</button>
     <button class="tab" id="tab-sc" onclick="setRole('sc')">🌐 System Council Member</button>
-    <button class="tab" id="tab-ask" onclick="setRole('ask')">✦ Ask CGIAR</button>
   </div>
 </div>
 
 <div class="main">
 
-  <div class="welcome-card">
+  <div class="wc">
     <div class="wc-icon">🌱</div>
     <div>
       <div class="wc-title" id="wc-title">Welcome, new CGIAR Board Member</div>
-      <div class="wc-desc" id="wc-desc">This agent guides you through your induction. Follow the walkthrough, click a topic, or ask anything freely — switch to Live Search to query cgiar.org in real time.</div>
+      <div class="wc-desc" id="wc-desc">This agent guides you through your induction — CGIAR's mission, your governance role, Board committees, key documents, policies, and practical matters. Follow the walkthrough or ask anything freely.</div>
     </div>
   </div>
 
-  <div style="background:#fff;border:1px solid #dde8e2;border-radius:12px;padding:12px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
-    <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Direct contact</span>
-    <a href="mailto:cgiar-board-secretariat@cgiar.org" style="display:inline-flex;align-items:center;gap:6px;background:var(--gl);border:1px solid #b8d9c4;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--g1);text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g1)';this.style.color='#fff'" onmouseout="this.style.background='var(--gl)';this.style.color='var(--g1)'">
-      ✉ Board Secretariat
-    </a>
-    <a href="mailto:systemcouncil@cgiar.org" style="display:inline-flex;align-items:center;gap:6px;background:var(--gl);border:1px solid #b8d9c4;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--g1);text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g1)';this.style.color='#fff'" onmouseout="this.style.background='var(--gl)';this.style.color='var(--g1)'">
-      ✉ System Council Secretariat
-    </a>
-    <a href="https://director.diligentboards.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--g1);border:1px solid var(--g1);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:#fff;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g2)'" onmouseout="this.style.background='var(--g1)'">
-      🔐 Log in to Diligent
-    </a>
+  <!-- Contact bar — role-aware -->
+  <div class="contact-bar" id="contact-bar">
+    <span class="cb-label">Quick contact</span>
+    <a href="mailto:cgiar-board-secretariat@cgiar.org" class="cb-btn">✉ Board Secretariat</a>
+    <a href="mailto:systemcouncil@cgiar.org" class="cb-btn" id="cb-sc" style="display:none">✉ SC Secretariat</a>
+    <a href="https://director.diligentboards.com" target="_blank" class="cb-btn diligent" id="cb-diligent">🔐 Log in to Diligent</a>
   </div>
 
-  <div class="wt" id="wt">
+  <div class="wt">
     <div class="wt-hdr">
       <div class="wt-title">Guided Induction Walkthrough</div>
       <div class="pb-wrap">
@@ -176,20 +147,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
     <div class="wt-steps" id="wt-steps"></div>
   </div>
 
-  <div id="topic-section">
+  <div>
     <div class="sec-lbl">Explore by topic</div>
     <div class="grid" id="topic-grid"></div>
   </div>
 
   <div class="chat">
     <div class="msgs" id="msgs"></div>
-    <div class="mode-row" id="mode-row">
-      <button class="mbtn on" id="mbtn-kb" onclick="setMode('kb')">📚 Knowledge base</button>
-      <button class="mbtn" id="mbtn-ai" onclick="setMode('ai')">✦ Live search cgiar.org</button>
-    </div>
-    <div class="live-row" id="live-row" style="display:none">
-      <div class="ldot"></div> Searching cgiar.org in real time
-    </div>
     <div class="sugs" id="sugs"></div>
     <div class="inp-row">
       <input class="inp" id="inp" placeholder="Ask anything about CGIAR, your role, governance, documents…" onkeydown="if(event.key==='Enter')send()">
@@ -197,7 +161,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
     </div>
   </div>
 
-  <div class="foot">CGIAR Governance Team · AI Induction Agent · Live search powered by Anthropic · Internal use only</div>
+  <div class="foot">CGIAR Governance Team · AI Induction Agent · Knowledge Base Edition · Internal use only</div>
 </div>
 
 <script>
@@ -223,12 +187,6 @@ const ROLES = {
       "What are my responsibilities as a Board member?",
       "What committees does the Board have?",
       "How do I log in to Diligent?",
-      "When and how will I receive my honorarium?",
-      "How do I submit a travel expense claim?",
-      "What is the Declaration of Interest?",
-      "Who do I contact if I have a question?",
-      "What is my obligation around confidentiality?",
-      "When does the Board meet?",
     ],
     kb: {
       "mission":      `CGIAR's <strong>mission</strong> is to deliver science and innovation that advances the transformation of food, land, and water systems in a climate crisis.<br><br>Its <strong>vision</strong> is a world with sustainable and resilient food, land, and water systems that deliver diverse, healthy, safe, sufficient, and affordable diets — ensuring improved livelihoods and greater social equality within planetary boundaries.<br><br>CGIAR works across <strong>six impact areas</strong>:<ul><li>Climate adaptation &amp; mitigation</li><li>Environmental health &amp; biodiversity</li><li>Gender equity, youth &amp; social inclusion</li><li>Nutrition, health &amp; food security</li><li>Poverty reduction &amp; livelihoods</li><li>Food systems transformation</li></ul>`,
@@ -240,6 +198,7 @@ const ROLES = {
       "practical":    `Practical matters for new Board members:<br><br><strong>Diligent</strong> — your secure Board portal for all documents, agendas, and minutes. Log in at <a href="https://director.diligentboards.com" target="_blank" style="color:var(--green-mid);font-weight:600;">director.diligentboards.com</a> using the credentials sent with your onboarding email. Contact the Governance unit assistant if you need support accessing your account.<br><br><strong>CGIAR email</strong> — a CGIAR email address has been created for you. Please use it for all Board correspondence.<br><br><strong>Honorarium</strong> — set up when you submitted your bank and tax details via the Formstack form. Contact the Secretariat at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a> with any questions.<br><br><strong>Travel &amp; expenses</strong> — consult the Board Member Travel Policy. Submit expenses via the letter of submission template and expense report template. Travel is booked through Concur.<br><br><strong>Travel insurance</strong> — you have been enrolled with AIARC. Coverage details are in your onboarding pack.`,
       "centers":      `CGIAR has <strong>13 Research Centers</strong>, each with a specific mandate:<ul><li>Alliance of Bioversity International &amp; CIAT</li><li>CIFOR-ICRAF</li><li>CIMMYT</li><li>CIP (International Potato Center)</li><li>IFPRI</li><li>IITA</li><li>ILRI</li><li>IRRI</li><li>IWMI</li><li>WorldFish</li><li>ICARDA</li></ul>Each Center is an independent legal entity. Together they form the <strong>Integrated Partnership</strong>, united by common values and CGIAR's shared mission.`,
       "assurance":    `CGIAR's assurance and oversight ecosystem:<br><br><strong>ISDC</strong> (Independent Science for Development Council) — scientific quality assurance and advice on the research portfolio.<br><br><strong>IAES</strong> (Independent Advisory and Evaluation Service) — independent evaluations of CGIAR programs.<br><br><strong>SPIA</strong> (Standing Panel on Impact Assessment) — assesses the impact of CGIAR research.<br><br><strong>AFRC</strong> (Audit, Finance &amp; Risk Committee) — the Board's committee overseeing audit, finance, and risk.<br><br><strong>Internal Audit</strong> — provides system-wide internal assurance.<br><br><strong>External Auditor</strong> — independent audit of the System Organization.<br><br><strong>Ombuds Office</strong> — confidential, informal conflict resolution.`,
+      "diligent help": `<strong>How to log in to Diligent:</strong><br><br>Diligent is your secure Board portal for all meeting documents, agendas, and minutes.<br><br>👉 <strong>Log in here:</strong> <a href="https://director.diligentboards.com" target="_blank" style="color:var(--green-mid);font-weight:600;">director.diligentboards.com</a><br><br>Use the credentials sent in your onboarding email. If you have not received them or have trouble accessing your account, contact the Board Secretariat at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--green-mid);font-weight:600;">cgiar-board-secretariat@cgiar.org</a>.<br><br><strong>Tips:</strong><ul><li>Meeting materials are organised by meeting date</li><li>Use the search function to find specific documents</li><li>You can annotate documents directly in Diligent</li><li>Download documents for offline access</li></ul>`,
     }
   },
   sc: {
@@ -263,11 +222,7 @@ const ROLES = {
       "What committees does the SC have?",
       "What is the CGIAR System Framework?",
       "How do decisions get made in the SC?",
-      "What is my obligation around confidentiality?",
       "Who are the Active Observers at SC meetings?",
-      "What is the Declaration of Interest?",
-      "Who do I contact if I have a question?",
-      "When does the System Council meet?",
     ],
     kb: {
       "mission":      `CGIAR's <strong>mission</strong> is to deliver science and innovation that advances the transformation of food, land, and water systems in a climate crisis.<br><br>Its <strong>vision</strong> is a world with sustainable and resilient food, land, and water systems that deliver diverse, healthy, safe, sufficient, and affordable diets — ensuring improved livelihoods and greater social equality within planetary boundaries.<br><br>CGIAR works across <strong>six impact areas</strong>:<ul><li>Climate adaptation &amp; mitigation</li><li>Environmental health &amp; biodiversity</li><li>Gender equity, youth &amp; social inclusion</li><li>Nutrition, health &amp; food security</li><li>Poverty reduction &amp; livelihoods</li><li>Food systems transformation</li></ul>`,
@@ -305,182 +260,120 @@ const ROLES = {
   }
 };
 
-let role = 'board', step = 0, msgs = [], mode = 'kb';
-
-function init() {
-  renderSteps(); renderTopics(); renderSugs();
-  if (!msgs.length) {
-    push('a', `👋 Welcome to CGIAR! I'm your induction guide for <strong>${ROLES[role].label}s</strong>.<br><br>Use the <strong>walkthrough</strong> above to go step by step, click a <strong>topic card</strong> to jump anywhere, or <strong>ask me anything</strong> below.<br><br>Switch to <strong>✦ Live search</strong> to query cgiar.org in real time for up-to-date answers.`);
-  }
-}
+let role = 'board', step = 0, msgs = [];
 
 function setRole(r) {
   role = r; step = 0; msgs = [];
   document.getElementById('tab-board').classList.toggle('on', r === 'board');
   document.getElementById('tab-sc').classList.toggle('on', r === 'sc');
-  document.getElementById('tab-ask').classList.toggle('on', r === 'ask');
-
-  const isAsk = r === 'ask';
-  // Show/hide induction dashboard elements
-  ['wt','topic-section','mode-row'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = isAsk ? 'none' : '';
-  });
-
-  if (isAsk) {
-    document.getElementById('wc-title').textContent = 'Ask CGIAR';
-    document.getElementById('wc-desc').textContent = 'Ask anything about CGIAR — governance, research, strategy, centers, policies, or anything on cgiar.org. This chatbot searches the CGIAR website in real time to give you accurate, up-to-date answers.';
-    document.getElementById('msgs').innerHTML = '';
-    document.getElementById('sugs').innerHTML = [
-      'What is the CGIAR 2030 strategy?',
-      'Who are the CGIAR Research Centers?',
-      'What are CGIAR impact areas?',
-      'How is CGIAR funded?',
-      'What is the Integration Framework Agreement?',
-    ].map(s => `<button class="sug" onclick="askSug('${s}')">${s}</button>`).join('');
-    document.getElementById('inp').placeholder = 'Ask anything about CGIAR…';
-    msgs = [];
-    push('a', `✦ <strong>Welcome to Ask CGIAR</strong><br><br>I search <a href="https://cgiar.org" target="_blank" style="color:var(--g2);font-weight:600;">cgiar.org</a> in real time to answer your questions. Ask me anything about CGIAR's mission, governance, research, policies, centers, strategy, or any other topic.<br><br>What would you like to know?`);
-  } else {
-    document.getElementById('msgs').innerHTML = '';
-    document.getElementById('wc-title').textContent = ROLES[r].welcome;
-    document.getElementById('wc-desc').textContent = ROLES[r].desc;
-    init();
-  }
+  document.getElementById('wc-title').textContent = ROLES[r].welcome;
+  document.getElementById('wc-desc').textContent = ROLES[r].desc;
+  document.getElementById('msgs').innerHTML = '';
+  // Show/hide role-specific contact bar items
+  document.getElementById('cb-sc').style.display = r === 'sc' ? 'inline-flex' : 'none';
+  document.getElementById('cb-diligent').style.display = r === 'board' ? 'inline-flex' : 'none';
+  init();
 }
 
-function setMode(m) {
-  mode = m;
-  document.getElementById('mbtn-kb').classList.toggle('on', m === 'kb');
-  document.getElementById('mbtn-ai').classList.toggle('on', m === 'ai');
-  document.getElementById('live-row').style.display = m === 'ai' ? 'flex' : 'none';
-  document.getElementById('inp').placeholder = m === 'ai'
-    ? 'Ask anything — searching cgiar.org in real time…'
-    : 'Ask anything about CGIAR, your role, governance, documents…';
+function init() {
+  renderSteps(); renderTopics(); renderSugs();
+  if (!msgs.length) {
+    push('a', '👋 Welcome to CGIAR! I\'m your induction guide for <strong>' + ROLES[role].label + 's</strong>.<br><br>Use the <strong>walkthrough</strong> above to go step by step, click a <strong>topic card</strong> to jump anywhere, or <strong>ask me anything</strong> below.');
+  }
 }
 
 function renderSteps() {
   const steps = ROLES[role].steps;
   document.getElementById('wt-steps').innerHTML = steps.map((s, i) => {
     const c = i < step ? 'pill done' : i === step ? 'pill cur' : 'pill next';
-    return `<div class="${c}" onclick="goStep(${i})">${s}</div>`;
+    return '<div class="' + c + '" onclick="goStep(' + i + ')">' + s + '</div>';
   }).join('');
   const pct = Math.round(((step + 1) / steps.length) * 100);
   document.getElementById('pb-fill').style.width = pct + '%';
-  document.getElementById('pb-lbl').textContent = `${step + 1} / ${steps.length}`;
+  document.getElementById('pb-lbl').textContent = (step + 1) + ' / ' + steps.length;
 }
 
 function goStep(idx) {
   step = idx; renderSteps();
-  const s = ROLES[role].steps[idx];
-  push('u', `Tell me about: ${s}`);
-  typing(() => {
-    const steps = ROLES[role].steps;
+  const steps = ROLES[role].steps;
+  push('u', 'Tell me about: ' + steps[idx]);
+  typing(function() {
     const nxt = idx < steps.length - 1
-      ? `<br><br><em>Next: <strong>${steps[idx+1]}</strong> — click above or keep asking.</em>`
-      : `<br><br><em>🎉 Walkthrough complete! Ask any follow-up questions below.</em>`;
-    push('a', findKb(s.toLowerCase()) + nxt);
+      ? '<br><br><em>Next: <strong>' + steps[idx+1] + '</strong> — click above or keep asking.</em>'
+      : '<br><br><em>🎉 Walkthrough complete! Ask any follow-up questions below.</em>';
+    push('a', findKb(steps[idx].toLowerCase()) + nxt);
     step = Math.min(idx + 1, steps.length - 1); renderSteps();
   });
 }
 
 function renderTopics() {
-  document.getElementById('topic-grid').innerHTML = ROLES[role].topics.map(t =>
-    `<div class="topic" onclick="askTopic('${t.name}')">
-      <div class="t-icon">${t.icon}</div>
-      <div class="t-name">${t.name}</div>
-      <div class="t-desc">${t.desc}</div>
-    </div>`).join('');
+  var grid = document.getElementById('topic-grid');
+  grid.innerHTML = '';
+  ROLES[role].topics.forEach(function(t) {
+    var div = document.createElement('div');
+    div.className = 'topic';
+    div.innerHTML = '<div class="t-icon">' + t.icon + '</div><div class="t-name">' + t.name + '</div><div class="t-desc">' + t.desc + '</div>';
+    div.addEventListener('click', (function(n){ return function(){ askTopic(n); }; })(t.name));
+    grid.appendChild(div);
+  });
 }
 
 function askTopic(name) {
   push('u', name);
-  if (mode === 'ai') { liveSearch(name); return; }
-  typing(() => push('a', findKb(name.toLowerCase())));
+  typing(function() { push('a', findKb(name.toLowerCase())); });
 }
 
 function renderSugs() {
-  const all = ROLES[role].suggestions;
-  const vis = all.slice(0, 3);
-  const hid = all.slice(3);
-  let h = vis.map(s => `<button class="sug" onclick="askSug('${s}')">${s}</button>`).join('');
-  if (hid.length) {
-    h += `<button class="sug" id="more-btn" onclick="showMore()" style="background:transparent;border-color:var(--g1);color:var(--g1)">+ ${hid.length} more…</button>`;
-    h += hid.map(s => `<button class="sug sug-h" style="display:none" onclick="askSug('${s}')">${s}</button>`).join('');
+  var sugs = document.getElementById('sugs');
+  sugs.innerHTML = '';
+  var all = ROLES[role].suggestions;
+  all.forEach(function(s, idx) {
+    var btn = document.createElement('button');
+    btn.className = 'sug' + (idx >= 3 ? ' sug-h' : '');
+    btn.textContent = s;
+    if (idx >= 3) btn.style.display = 'none';
+    btn.addEventListener('click', (function(q){ return function(){ askSug(q); }; })(s));
+    sugs.appendChild(btn);
+  });
+  if (all.length > 3) {
+    var more = document.createElement('button');
+    more.className = 'sug';
+    more.id = 'more-btn';
+    more.textContent = '+ ' + (all.length - 3) + ' more…';
+    more.style.cssText = 'background:transparent;border-color:var(--g1);color:var(--g1)';
+    more.addEventListener('click', showMore);
+    sugs.insertBefore(more, sugs.children[3]);
   }
-  document.getElementById('sugs').innerHTML = h;
 }
-
 function showMore() {
-  document.querySelectorAll('.sug-h').forEach(b => b.style.display = '');
-  const b = document.getElementById('more-btn'); if (b) b.remove();
+  document.querySelectorAll('.sug-h').forEach(function(b) { b.style.display = ''; });
+  var b = document.getElementById('more-btn'); if (b) b.remove();
 }
 
 function askSug(q) {
   push('u', q);
-  if (mode === 'ai' || role === 'ask') { liveSearch(q); return; }
-  typing(() => push('a', findKb(q.toLowerCase())));
+  typing(function() { push('a', findKb(q.toLowerCase())); });
 }
 
 function send() {
-  const inp = document.getElementById('inp');
-  const txt = inp.value.trim(); if (!txt) return;
+  var inp = document.getElementById('inp');
+  var txt = inp.value.trim(); if (!txt) return;
   inp.value = ''; push('u', txt);
-  if (mode === 'ai' || role === 'ask') { liveSearch(txt); return; }
-  typing(() => push('a', findKb(txt.toLowerCase())));
-}
-
-async function liveSearch(q) {
-  const el = document.getElementById('msgs');
-  const div = document.createElement('div');
-  div.className = 'msg a'; div.id = 'typ-div';
-  div.innerHTML = `<div class="av">🌿</div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div><div style="font-size:10px;color:var(--muted);margin-top:4px">Searching cgiar.org…</div></div>`;
-  el.appendChild(div); el.scrollTop = el.scrollHeight;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: role === 'ask'
-          ? `You are the CGIAR information assistant. Search cgiar.org to answer questions accurately and concisely. Always cite the specific pages you found. Cover any topic related to CGIAR — mission, governance, research, centers, strategy, funding, policies, publications, or impact. If you cannot find something on cgiar.org, say so clearly.`
-          : `You are the CGIAR Induction Guide helping a new ${ROLES[role].label}. Search cgiar.org to find accurate answers. Be concise, welcoming, and cite sources. Key links: Diligent login director.diligentboards.com, policies cgiar.org/how-we-work, ombuds cgiar.org/ombuds-office. Never share personal member data or guess on governance matters.`,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: q }]
-      })
-    });
-
-    div.remove();
-    if (!res.ok) throw new Error(res.status);
-    const data = await res.json();
-
-    let text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-    text = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n\n/g, '<br><br>')
-      .replace(/\n/g, '<br>');
-
-    push('a', text + `<div style="margin-top:6px;font-size:10px;color:var(--muted)">✦ Sourced from cgiar.org via live search</div>`);
-  } catch(e) {
-    div.remove();
-    push('a', `<div class="err">⚠ Could not reach cgiar.org right now. Try the 📚 Knowledge base mode, or contact the Board Secretariat at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a>.</div>`);
-  }
+  typing(function() { push('a', findKb(txt.toLowerCase())); });
 }
 
 function findKb(q) {
-  const kb = ROLES[role].kb;
-  for (const k of Object.keys(kb)) if (q.includes(k)) return kb[k];
-  const map = {
+  var kb = ROLES[role].kb;
+  var keys = Object.keys(kb);
+  for (var i = 0; i < keys.length; i++) { if (q.includes(keys[i])) return kb[keys[i]]; }
+  var map = {
     "mission":["mission","vision","2030","impact area","what does cgiar","purpose","food"],
     "governance":["governance","structure","how is cgiar","who runs","three bod","emd overview"],
     "board role":["board role","my role","responsibilit","duties","fiduciary","what am i","what do i"],
     "sc role":["sc role","council role","strategic oversight","funder representative"],
     "committees":["committee","siip","afrc","rmsca","gpc","steering","simec","aoc","nominations"],
     "documents":["document","charter","handbook","framework","rules of procedure","where can i find"],
-    "policies":["polic","code of conduct","safeguarding","whistleblow","declaration of interest","harassment"],
+    "policies":["polic","code of conduct","safeguarding","whistleblow","declaration of interest","harassment","conduct"],
     "diligent help":["diligent","log in","login","portal","sign in","board portal"],
     "cgiar email":["email","cgiar email","my email"],
     "honorarium":["honorarium","pay","payment","remuneration","compensation"],
@@ -509,27 +402,34 @@ function findKb(q) {
     "funding":["funding","funder","resource","trust fund","mobilisation"],
     "gdi":["gdi","gender","diversity","inclusion","equity"],
   };
-  for (const [k, kws] of Object.entries(map)) {
-    if (kws.some(kw => q.includes(kw)) && kb[k]) return kb[k];
+  var mapKeys = Object.keys(map);
+  for (var j = 0; j < mapKeys.length; j++) {
+    var k = mapKeys[j];
+    var kws = map[k];
+    for (var m = 0; m < kws.length; m++) {
+      if (q.includes(kws[m]) && kb[k]) return kb[k];
+    }
   }
-  return `I couldn't find a specific answer for <strong>"${q}"</strong> in the knowledge base.<br><br>💡 Try switching to <strong>✦ Live search</strong> above to search cgiar.org in real time, or contact the <strong>Board Secretariat</strong> directly at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a>.`;
+  return "I couldn't find a specific answer for <strong>\"" + q + "\"</strong> in the knowledge base.<br><br>Please contact the <strong>Board Secretariat</strong> at <a href=\"mailto:cgiar-board-secretariat@cgiar.org\" style=\"color:var(--g2);font-weight:600;\">cgiar-board-secretariat@cgiar.org</a> or visit <a href=\"https://cgiar.org\" target=\"_blank\" style=\"color:var(--g2);font-weight:600;\">cgiar.org</a> for more information.";
 }
 
-function push(r, t) { msgs.push({r, t}); render(); }
+function push(r, t) { msgs.push({r: r, t: t}); render(); }
+
 function render() {
-  const el = document.getElementById('msgs');
-  el.innerHTML = msgs.map(m =>
-    `<div class="msg ${m.r}"><div class="av">${m.r==='a'?'🌿':'👤'}</div><div class="bbl">${m.t}</div></div>`
-  ).join('');
+  var el = document.getElementById('msgs');
+  el.innerHTML = msgs.map(function(m) {
+    return '<div class="msg ' + m.r + '"><div class="av">' + (m.r === 'a' ? '🌿' : '👤') + '</div><div class="bbl">' + m.t + '</div></div>';
+  }).join('');
   el.scrollTop = el.scrollHeight;
 }
+
 function typing(cb) {
-  const el = document.getElementById('msgs');
-  const d = document.createElement('div');
+  var el = document.getElementById('msgs');
+  var d = document.createElement('div');
   d.className = 'msg a'; d.id = 'typ-div';
-  d.innerHTML = `<div class="av">🌿</div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  d.innerHTML = '<div class="av">🌿</div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div></div>';
   el.appendChild(d); el.scrollTop = el.scrollHeight;
-  setTimeout(() => { d.remove(); cb(); }, 600 + Math.random()*300);
+  setTimeout(function() { d.remove(); cb(); }, 600 + Math.random() * 300);
 }
 
 init();
