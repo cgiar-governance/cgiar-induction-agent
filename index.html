@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGIAR Induction Agent</title>
+<style>
+/* System font fallbacks — no external dependency */
+</style>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#033529;--g2:#1a6645;--g3:#4caf7d;--gl:#e8f4ee;
+  --cream:#faf8f3;--text:#1a1a1a;--muted:#5a6672;--white:#fff;
+  --r:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* Header */
+.hdr{background:var(--g1);position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hdr-inner{max-width:920px;margin:0 auto;padding:24px 28px 20px;position:relative;z-index:1}
+.hdr-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,125,.18);border:1px solid rgba(76,175,125,.35);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--g3);text-transform:uppercase;margin-bottom:10px}
+.hdr-badge::before{content:"●";font-size:8px}
+.hdr-title{font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,.5)}
+
+/* Role tabs */
+.tabs{background:var(--g1);border-top:1px solid rgba(255,255,255,.07)}
+.tabs-inner{max-width:920px;margin:0 auto;padding:0 28px;display:flex;gap:2px}
+.tab{padding:10px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab:hover{color:rgba(255,255,255,.8)}
+.tab.on{color:var(--g3);border-bottom-color:var(--g3)}
+#tab-ask.on{color:#f0c96e;border-bottom-color:#f0c96e}
+
+/* Main */
+.main{flex:1;max-width:920px;margin:0 auto;width:100%;padding:20px 28px 32px;display:flex;flex-direction:column;gap:16px}
+
+/* Welcome card */
+.welcome-card{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:18px 22px;display:flex;gap:14px;align-items:flex-start}
+.wc-icon{width:38px;height:38px;background:var(--gl);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.wc-title{font-family:Georgia,'Times New Roman',serif;font-size:15px;color:var(--g1);margin-bottom:4px}
+.wc-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* Walkthrough */
+.wt{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);overflow:hidden}
+.wt-hdr{background:var(--g1);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.wt-title{font-family:Georgia,'Times New Roman',serif;font-size:13px;color:#fff;font-weight:600}
+.pb-wrap{display:flex;align-items:center;gap:9px}
+.pb{width:100px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden}
+.pb-fill{height:100%;background:var(--g3);border-radius:2px;transition:width .4s}
+.pb-lbl{font-size:11px;color:rgba(255,255,255,.55);white-space:nowrap}
+.wt-steps{display:flex;overflow-x:auto;padding:12px 16px;gap:7px;scrollbar-width:none}
+.wt-steps::-webkit-scrollbar{display:none}
+.pill{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .15s;border:1.5px solid transparent;flex-shrink:0}
+.pill.done{background:var(--gl);color:var(--g2);border-color:#b8d9c4}
+.pill.done::before{content:"✓ "}
+.pill.cur{background:var(--g1);color:#fff;border-color:var(--g1);box-shadow:0 2px 8px rgba(3,53,41,.2)}
+.pill.next{background:#f5f7f6;color:var(--muted);border-color:#e0e8e4}
+.pill.next:hover{border-color:var(--g3);color:var(--g1)}
+
+/* Topics */
+.sec-lbl{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.topic{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:5px}
+.topic:hover{border-color:var(--g3);background:var(--gl);transform:translateY(-1px);box-shadow:0 4px 12px rgba(3,53,41,.07)}
+.t-icon{font-size:16px}
+.t-name{font-size:11.5px;font-weight:600;color:var(--g1);line-height:1.3}
+.t-desc{font-size:10px;color:var(--muted);line-height:1.4}
+
+/* Chat */
+.chat{background:#fff;border:1px solid #dde8e2;border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden}
+.msgs{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:320px;min-height:120px}
+.msg{display:flex;gap:8px;align-items:flex-start;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.msg.u{flex-direction:row-reverse}
+.av{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.msg.a .av{background:var(--g1)}
+.msg.u .av{background:#c9a84c}
+.bbl{max-width:80%;padding:9px 13px;border-radius:9px;font-size:12.5px;line-height:1.65}
+.msg.a .bbl{background:var(--gl);color:var(--text);border-bottom-left-radius:3px}
+.msg.u .bbl{background:var(--g1);color:#fff;border-bottom-right-radius:3px}
+.bbl ul{margin:4px 0 3px 15px}
+.bbl li{margin-bottom:2px}
+.bbl a{color:var(--g2);font-weight:600}
+.msg.u .bbl a{color:#a8e6c4}
+.typing{display:flex;gap:4px;align-items:center;padding:2px 0}
+.typing span{width:5px;height:5px;background:var(--g2);border-radius:50%;animation:bc 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bc{0%,60%,100%{transform:none}30%{transform:translateY(-4px)}}
+
+/* Mode toggle */
+.mode-row{display:flex;gap:6px;padding:10px 14px 0}
+.mbtn{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
+.mbtn.on{background:var(--g1);color:#fff;border-color:var(--g1)}
+.mbtn:not(.on){background:var(--gl);color:var(--g1);border-color:#c5ddd0}
+.live-row{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--g3);font-weight:600;padding:4px 14px 0}
+.ldot{width:6px;height:6px;background:var(--g3);border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+
+/* Source chips */
+.src-row{display:flex;flex-wrap:wrap;margin-top:6px;gap:4px}
+.src{display:inline-flex;align-items:center;gap:3px;background:rgba(3,53,41,.06);border:1px solid #c5ddd0;border-radius:6px;padding:2px 8px;font-size:10px;color:var(--g2);text-decoration:none;transition:all .15s}
+.src:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
+
+/* Suggestions */
+.sugs{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px}
+.sug{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;padding:4px 11px;background:var(--gl);border:1px solid #c5ddd0;border-radius:20px;cursor:pointer;color:var(--g1);transition:all .15s;font-weight:500}
+.sug:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
+
+/* Input */
+.inp-row{border-top:1px solid #e8eded;padding:11px 12px;display:flex;gap:8px;align-items:center;background:#fafcfa}
+.inp{flex:1;border:1px solid #cfd9d4;border-radius:8px;padding:8px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;color:var(--text);background:#fff;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--g3)}
+.inp::placeholder{color:#aab8b2}
+.send{width:32px;height:32px;background:var(--g1);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
+.send:hover{background:var(--g2)}
+.send svg{width:14px;height:14px;fill:#fff}
+
+/* Error */
+.err{background:#fff3f3;border:1px solid #ffcdd2;border-radius:9px;padding:9px 13px;font-size:12px;color:#c62828;border-bottom-left-radius:3px}
+
+.foot{text-align:center;font-size:10px;color:#aab8b2;padding:9px;border-top:1px solid #edf2ef}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-badge">AI Induction Agent</div>
+    <div class="hdr-title">Welcome to CGIAR — Your Induction Guide</div>
+    <div class="hdr-sub">Science for a Food-Secure Future · CGIAR Governance Team</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab on" id="tab-board" onclick="setRole('board')">🌿 CGIAR Board Member</button>
+    <button class="tab" id="tab-sc" onclick="setRole('sc')">🌐 System Council Member</button>
+    <button class="tab" id="tab-ask" onclick="setRole('ask')">✦ Ask CGIAR</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="welcome-card">
+    <div class="wc-icon">🌱</div>
+    <div>
+      <div class="wc-title" id="wc-title">Welcome, new CGIAR Board Member</div>
+      <div class="wc-desc" id="wc-desc">This agent guides you through your induction. Follow the walkthrough, click a topic, or ask anything freely — switch to Live Search to query cgiar.org in real time.</div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border:1px solid #dde8e2;border-radius:12px;padding:12px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+    <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Direct contact</span>
+    <a href="mailto:cgiar-board-secretariat@cgiar.org" style="display:inline-flex;align-items:center;gap:6px;background:var(--gl);border:1px solid #b8d9c4;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--g1);text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g1)';this.style.color='#fff'" onmouseout="this.style.background='var(--gl)';this.style.color='var(--g1)'">
+      ✉ Board Secretariat
+    </a>
+    <a href="mailto:systemcouncil@cgiar.org" style="display:inline-flex;align-items:center;gap:6px;background:var(--gl);border:1px solid #b8d9c4;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:var(--g1);text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g1)';this.style.color='#fff'" onmouseout="this.style.background='var(--gl)';this.style.color='var(--g1)'">
+      ✉ System Council Secretariat
+    </a>
+    <a href="https://director.diligentboards.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--g1);border:1px solid var(--g1);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:600;color:#fff;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='var(--g2)'" onmouseout="this.style.background='var(--g1)'">
+      🔐 Log in to Diligent
+    </a>
+  </div>
+
+  <div class="wt" id="wt">
+    <div class="wt-hdr">
+      <div class="wt-title">Guided Induction Walkthrough</div>
+      <div class="pb-wrap">
+        <div class="pb"><div class="pb-fill" id="pb-fill" style="width:14%"></div></div>
+        <div class="pb-lbl" id="pb-lbl">1 / 7</div>
+      </div>
+    </div>
+    <div class="wt-steps" id="wt-steps"></div>
+  </div>
+
+  <div id="topic-section">
+    <div class="sec-lbl">Explore by topic</div>
+    <div class="grid" id="topic-grid"></div>
+  </div>
+
+  <div class="chat">
+    <div class="msgs" id="msgs"></div>
+    <div class="mode-row" id="mode-row">
+      <button class="mbtn on" id="mbtn-kb" onclick="setMode('kb')">📚 Knowledge base</button>
+      <button class="mbtn" id="mbtn-ai" onclick="setMode('ai')">✦ Live search cgiar.org</button>
+    </div>
+    <div class="live-row" id="live-row" style="display:none">
+      <div class="ldot"></div> Searching cgiar.org in real time
+    </div>
+    <div class="sugs" id="sugs"></div>
+    <div class="inp-row">
+      <input class="inp" id="inp" placeholder="Ask anything about CGIAR, your role, governance, documents…" onkeydown="if(event.key==='Enter')send()">
+      <button class="send" onclick="send()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
+    </div>
+  </div>
+
+  <div class="foot">CGIAR Governance Team · AI Induction Agent · Live search powered by Anthropic · Internal use only</div>
+</div>
+
+<script>
+const ROLES = {
+  board: {
+    label: "CGIAR Board Member",
+    welcome: "Welcome, new CGIAR Board Member",
+    desc: "This agent guides you through your induction — CGIAR's mission, your governance role and responsibilities, Board committees, key documents, policies, and practical matters. Follow the guided walkthrough or ask anything freely.",
+    steps: ["CGIAR Mission & Vision","Governance Structure","Your Role as Board Member","Board Committees","Key Documents","Policies & Ethics","Practical Matters"],
+    topics: [
+      {icon:"🌍", name:"Mission & Strategy",   desc:"CGIAR's 2030 vision and research portfolio"},
+      {icon:"🏛️", name:"Governance Structure", desc:"CGIAR Board, System Council, Centers, EMD"},
+      {icon:"📋", name:"Your Board Role",       desc:"Accountabilities, fiduciary duties, term"},
+      {icon:"🤝", name:"Board Committees",      desc:"Steering, SIIP, RMSCA, GPC, AFRC"},
+      {icon:"📄", name:"Key Documents",         desc:"Charter, Rules of Procedure, Handbook"},
+      {icon:"⚖️", name:"Policies & Ethics",     desc:"Code of Conduct, conflicts of interest, safeguarding"},
+      {icon:"✈️", name:"Practical Matters",     desc:"Travel, expenses, Diligent, CGIAR email"},
+      {icon:"🔬", name:"Research Centers",      desc:"The 13 CGIAR Centers and their mandates"},
+      {icon:"📊", name:"Assurance & Audit",     desc:"ISDC, IAES, SPIA, AFRC, Internal Audit"},
+    ],
+    suggestions: [
+      "What is CGIAR's mission?",
+      "What are my responsibilities as a Board member?",
+      "What committees does the Board have?",
+      "How do I log in to Diligent?",
+      "When and how will I receive my honorarium?",
+      "How do I submit a travel expense claim?",
+      "What is the Declaration of Interest?",
+      "Who do I contact if I have a question?",
+      "What is my obligation around confidentiality?",
+      "When does the Board meet?",
+    ],
+    kb: {
+      "mission":      `CGIAR's <strong>mission</strong> is to deliver science and innovation that advances the transformation of food, land, and water systems in a climate crisis.<br><br>Its <strong>vision</strong> is a world with sustainable and resilient food, land, and water systems that deliver diverse, healthy, safe, sufficient, and affordable diets — ensuring improved livelihoods and greater social equality within planetary boundaries.<br><br>CGIAR works across <strong>six impact areas</strong>:<ul><li>Climate adaptation &amp; mitigation</li><li>Environmental health &amp; biodiversity</li><li>Gender equity, youth &amp; social inclusion</li><li>Nutrition, health &amp; food security</li><li>Poverty reduction &amp; livelihoods</li><li>Food systems transformation</li></ul>`,
+      "governance":   `CGIAR's governance has three main bodies — see <a href="https://www.cgiar.org/cgiar-system#Governance" target="_blank" style="color:var(--green-mid);font-weight:600;">cgiar.org/cgiar-system</a> for a full overview.<br><br><strong>CGIAR Board (Integrated Partnership Board)</strong> — the governance body of the CGIAR System Organization. Provides dynamic leadership, oversees the Executive Managing Director, and governs the Integrated Partnership.<br><br><strong>System Council</strong> — the strategic decision-making body of the whole CGIAR System, comprising up to 20 voting members representing Funders and developing countries.<br><br><strong>General Assembly of Centers</strong> — a forum for CGIAR's 13 Research Centers.<br><br><strong>Executive Managing Director (EMD)</strong> — leads the System Management Office, responsible for day-to-day operations and supporting all governance bodies.`,
+      "board role":   `As a <strong>CGIAR Board member</strong>, your core responsibilities include:<ul><li>Providing dynamic governance and strategic leadership for CGIAR</li><li>Appointing and overseeing the Executive Managing Director</li><li>Ensuring CGIAR delivers on its mission and 2030 strategy</li><li>Overseeing financial integrity, risk management, and internal controls</li><li>Serving on one or more standing Board committees</li><li>Acting in the interests of the whole CGIAR System — not any individual constituent</li><li>Completing your Declaration of Interest and disclosing any conflicts promptly</li><li>Attending Board meetings and engaging fully with induction materials</li></ul>`,
+      "committees":   `The CGIAR Board has five standing committees. See all committees on the <a href="https://www.cgiar.org/integrated-partnership-board#Standing+Committees" target="_blank" style="color:var(--green-mid);font-weight:600;">IPB Standing Committees page</a>.<br><br><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/bde4eb8d-adcd-4c8f-bd6d-d94578f77449/content" target="_blank" style="color:var(--green-mid);font-weight:600;">Audit, Finance &amp; Risk Committee (IPB-AFRC)</a> — financial reporting, internal and external audit, risk management, internal controls, ethics and business conduct framework, and compliance with applicable laws and codes of conduct. Chaired by a Board member; also includes external expert members appointed for their specialist knowledge.<br><br><a href="https://cgspace.cgiar.org/bitstreams/a5f190a3-7238-4f77-8b20-3857cbf320f3/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Steering Committee</a> — strategic guidance and coordination of Board business and its standing committees. Consists of the Board Chair, Vice Chair, and Chairs of all standing committees.<br><br><a href="https://cgspace.cgiar.org/bitstreams/16f25d15-32ef-4081-b937-0d58bbcd5a1f/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Science, Innovation, Impact &amp; Partnership Committee (SIIP)</a> — oversight of scientific direction, the research portfolio, partnership strategy, and monitoring and evaluation.<br><br><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/0f658099-756b-4f29-a111-e117a69a7358/content" target="_blank" style="color:var(--green-mid);font-weight:600;">Resource Mobilisation, Private Sector Engagement, Communications &amp; Advocacy Committee (RMSCA)</a> — fundraising strategy, resource mobilisation plans, private sector engagement, and communications and advocacy strategies.<br><br><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/439b8f1f-0bca-4aad-bc1b-c5bad40b3969/content" target="_blank" style="color:var(--green-mid);font-weight:600;">Governance &amp; People &amp; Culture Committee (GPC)</a> — oversight of Board operations, executive leadership, and People &amp; Culture including Gender, Diversity &amp; Inclusion.`,
+      "documents":    `Key governing documents for CGIAR Board members:<ul><li><a href="https://cgspace.cgiar.org/bitstreams/03c8028b-9a93-47bb-b292-3d251d6da6bd/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Charter of the CGIAR System Organization</a> — the primary governing instrument of the Board</li><li><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/7789005e-7197-4271-821b-7bef44947897/content" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR System Framework</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/90e5d7e1-f367-4e81-996a-b8b19bdf1e89/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Board Rules of Procedure (IPB)</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/2c1ecbfe-f4be-4527-b785-2bed56951e58/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Member Profile for the CGIAR Board</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/5a2b5b7f-6cc7-4fba-8440-e47164ac0cb6/download" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — Board Chair</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/c722638d-9934-4547-8a57-64a77c3098f6/download" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — Board Vice Chair</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/a5f190a3-7238-4f77-8b20-3857cbf320f3/download" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — Steering Committee</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/16f25d15-32ef-4081-b937-0d58bbcd5a1f/download" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — SIIP Committee</a></li><li><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/0f658099-756b-4f29-a111-e117a69a7358/content" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — RMSCA Committee</a></li><li><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/439b8f1f-0bca-4aad-bc1b-c5bad40b3969/content" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — Governance &amp; People &amp; Culture Committee</a></li><li><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/bde4eb8d-adcd-4c8f-bd6d-d94578f77449/content" target="_blank" style="color:var(--green-mid);font-weight:600;">ToR — AFRC</a></li><li><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113008/CGIAR-Code-of-Conduct-Gov-Officials-Approved-03.11.20.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Conduct for CGIAR Governance Officials</a></li><li><a href="https://www.cgiar.org/governance?f%5B0%5D=governance_type%3AIntegrated%20Partnership%20Board" target="_blank" style="color:var(--green-mid);font-weight:600;">Board Meetings &amp; Documents</a></li><li><strong>Board Handbook</strong> — attached to your onboarding email</li><li><strong>Integration Framework Agreement (IFA)</strong> — available on your Diligent Board site</li><li><strong>CGIAR 2030 Research and Innovation Strategy</strong> — available on your Diligent Board site</li></ul>All documents are also available on your <a href="https://director.diligentboards.com" target="_blank" style="color:var(--green-mid);font-weight:600;">Diligent Board site</a>.`,
+      "policies":     `Key policies all Board members must know. All policies are published on the <a href="https://www.cgiar.org/how-we-work#Policies+and+Procedures" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Policies & Procedures page</a>.<br><br><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113008/CGIAR-Code-of-Conduct-Gov-Officials-Approved-03.11.20.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Conduct for CGIAR Governance Officials</a> — expected standards of behaviour at all times.<br><br><strong>Declaration of Interest</strong> — must be completed before your first meeting and updated annually. Any conflicts must be disclosed promptly. Form shared with your onboarding pack.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Safeguarding.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Safeguarding Policy</a> — zero tolerance of harassment, abuse, and exploitation.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Whistleblowing.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Whistleblowing &amp; Retaliation Protection Policy</a> — how to raise concerns confidentially.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Anti-Harassment.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Anti-Harassment &amp; Discrimination Policy</a>.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Code-of-Ethics-and-Business-Conduct.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Ethics and Business Conduct for CGIAR Staff</a> — for reference on organisational standards.<br><br><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113007/CGIAR-Ethics-Framework-Sept-2020.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Ethics Framework</a>.<br><br><a href="https://www.cgiar.org/research/publication/framework-for-gender-diversity-and-inclusion-in-cgiars-workplaces/" target="_blank" style="color:var(--green-mid);font-weight:600;">Framework for Gender, Diversity &amp; Inclusion</a>.<br><br><strong>Board Member Travel Policy</strong> — expense submission process and eligible costs. Shared via your onboarding pack and Diligent site.<br><br><a href="https://www.cgiar.org/ombuds-office" target="_blank" style="color:var(--green-mid);font-weight:600;">Ombuds Office</a> — confidential, informal conflict resolution for all CGIAR stakeholders.`,
+      "practical":    `Practical matters for new Board members:<br><br><strong>Diligent</strong> — your secure Board portal for all documents, agendas, and minutes. Log in at <a href="https://director.diligentboards.com" target="_blank" style="color:var(--green-mid);font-weight:600;">director.diligentboards.com</a> using the credentials sent with your onboarding email. Contact the Governance unit assistant if you need support accessing your account.<br><br><strong>CGIAR email</strong> — a CGIAR email address has been created for you. Please use it for all Board correspondence.<br><br><strong>Honorarium</strong> — set up when you submitted your bank and tax details via the Formstack form. Contact the Secretariat at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a> with any questions.<br><br><strong>Travel &amp; expenses</strong> — consult the Board Member Travel Policy. Submit expenses via the letter of submission template and expense report template. Travel is booked through Concur.<br><br><strong>Travel insurance</strong> — you have been enrolled with AIARC. Coverage details are in your onboarding pack.`,
+      "centers":      `CGIAR has <strong>13 Research Centers</strong>, each with a specific mandate:<ul><li>Alliance of Bioversity International &amp; CIAT</li><li>CIFOR-ICRAF</li><li>CIMMYT</li><li>CIP (International Potato Center)</li><li>IFPRI</li><li>IITA</li><li>ILRI</li><li>IRRI</li><li>IWMI</li><li>WorldFish</li><li>ICARDA</li></ul>Each Center is an independent legal entity. Together they form the <strong>Integrated Partnership</strong>, united by common values and CGIAR's shared mission.`,
+      "assurance":    `CGIAR's assurance and oversight ecosystem:<br><br><strong>ISDC</strong> (Independent Science for Development Council) — scientific quality assurance and advice on the research portfolio.<br><br><strong>IAES</strong> (Independent Advisory and Evaluation Service) — independent evaluations of CGIAR programs.<br><br><strong>SPIA</strong> (Standing Panel on Impact Assessment) — assesses the impact of CGIAR research.<br><br><strong>AFRC</strong> (Audit, Finance &amp; Risk Committee) — the Board's committee overseeing audit, finance, and risk.<br><br><strong>Internal Audit</strong> — provides system-wide internal assurance.<br><br><strong>External Auditor</strong> — independent audit of the System Organization.<br><br><strong>Ombuds Office</strong> — confidential, informal conflict resolution.`,
+    }
+  },
+  sc: {
+    label: "System Council Member",
+    welcome: "Welcome, new System Council Member",
+    desc: "This agent guides you through your induction — CGIAR's mission, the System Council's strategic decision-making role, your accountability as a Funder or developing country representative, SC committees, key documents, and practical matters.",
+    steps: ["CGIAR Mission & Vision","Governance Structure","Your Role in the SC","SC Committees","Key Documents","Policies & Conduct","Practical Matters"],
+    topics: [
+      {icon:"🌍", name:"Mission & Strategy",   desc:"CGIAR's 2030 vision and research portfolio"},
+      {icon:"🏛️", name:"Governance Structure", desc:"SC, CGIAR Board, Centers, EMD relationships"},
+      {icon:"📋", name:"Your SC Role",          desc:"Strategic oversight, Funder accountability"},
+      {icon:"🤝", name:"SC Committees",         desc:"SIMEC, AOC, Nominations Committee"},
+      {icon:"📄", name:"Key Documents",         desc:"System Framework, SC Rules of Procedure"},
+      {icon:"⚖️", name:"Policies & Conduct",    desc:"Code of Conduct, acting in System interests"},
+      {icon:"💰", name:"Funding & Resources",   desc:"Resource mobilisation, Funder arrangements"},
+      {icon:"🔬", name:"Research Centers",      desc:"The 13 CGIAR Centers and their mandates"},
+      {icon:"📊", name:"Assurance & Oversight", desc:"AOC, ISDC, SPIA, IAES"},
+    ],
+    suggestions: [
+      "What is the System Council's role?",
+      "What committees does the SC have?",
+      "What is the CGIAR System Framework?",
+      "How do decisions get made in the SC?",
+      "What is my obligation around confidentiality?",
+      "Who are the Active Observers at SC meetings?",
+      "What is the Declaration of Interest?",
+      "Who do I contact if I have a question?",
+      "When does the System Council meet?",
+    ],
+    kb: {
+      "mission":      `CGIAR's <strong>mission</strong> is to deliver science and innovation that advances the transformation of food, land, and water systems in a climate crisis.<br><br>Its <strong>vision</strong> is a world with sustainable and resilient food, land, and water systems that deliver diverse, healthy, safe, sufficient, and affordable diets — ensuring improved livelihoods and greater social equality within planetary boundaries.<br><br>CGIAR works across <strong>six impact areas</strong>:<ul><li>Climate adaptation &amp; mitigation</li><li>Environmental health &amp; biodiversity</li><li>Gender equity, youth &amp; social inclusion</li><li>Nutrition, health &amp; food security</li><li>Poverty reduction &amp; livelihoods</li><li>Food systems transformation</li></ul>`,
+      "governance":   `CGIAR's governance has three main bodies:<br><br><strong>System Council</strong> — the strategic decision-making body of the whole CGIAR System. Up to 20 voting members (up to 15 Funder representatives and 5 developing country representatives). Keeps under review strategy, mission, impact, and continued relevancy.<br><br><strong>CGIAR Board (Integrated Partnership Board)</strong> — the governance body of the CGIAR System Organization. Governs day-to-day operations and appoints the Executive Managing Director. Works collaboratively with the System Council.<br><br><strong>General Assembly of Centers</strong> — a forum for CGIAR's 13 Research Centers.<br><br><strong>Executive Managing Director (EMD)</strong> — leads the System Management Office and supports all governance bodies.`,
+      "sc role":      `As a <strong>System Council member</strong>, your core responsibilities include:<ul><li>Strategic oversight of CGIAR's vision, direction, impact, and continued relevancy</li><li>Ensuring adequate resources to support delivery of CGIAR's 2030 Strategy</li><li>Overseeing programmatic performance of the Integrated Partnership</li><li>Reviewing and approving the CGIAR System Framework and key strategic decisions</li><li>Approving CGIAR Board member appointments (via the Nominations Committee)</li><li>Acting in the interests of the <strong>whole CGIAR System</strong> — not your constituency alone</li><li>Engaging collaboratively with the CGIAR Board on shared governance priorities</li><li>Completing your Declaration of Interest and disclosing any conflicts promptly</li></ul>`,
+      "committees":   `The System Council has three standing committees:<br><br><strong>SIMEC</strong> (Science, Innovation, Methods &amp; Evaluation Committee) — up to 9 members from SC voting constituencies. Oversees scientific quality, innovation methods, and evaluation matters.<br><br><strong>AOC</strong> (Assurance Oversight Committee) — up to 5 members. Provides assurance on the completeness and effectiveness of internal and external audit; oversees governance, risk management, and internal controls; structured reporting line between auditors and the SC.<br><br><strong>Nominations Committee</strong> — standing committee presenting nominees for CGIAR Board membership to the System Council for approval.`,
+      "documents":    `Key governing documents for System Council members:<ul><li><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/7789005e-7197-4271-821b-7bef44947897/content" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR System Framework</a> — the primary governing instrument of the System Council</li><li><a href="https://cgspace.cgiar.org/bitstreams/03c8028b-9a93-47bb-b292-3d251d6da6bd/download" target="_blank" style="color:var(--green-mid);font-weight:600;">Charter of the CGIAR System Organization</a></li><li><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113008/CGIAR-Code-of-Conduct-Gov-Officials-Approved-03.11.20.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Conduct for CGIAR Governance Officials</a></li><li><a href="https://www.cgiar.org/cgiar-system-council" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR System Council overview page</a> — composition, committees, decision register</li><li><a href="https://www.cgiar.org/governance?f%5B0%5D=governance_type%3ACGIAR%20System%20Council" target="_blank" style="color:var(--green-mid);font-weight:600;">SC Meetings &amp; Documents</a></li><li><a href="https://www.cgiar.org/cgiar-system-council#Decision+Register" target="_blank" style="color:var(--green-mid);font-weight:600;">SC Decision Register</a></li><li><a href="https://www.cgiar.org/assurance-oversights-functions" target="_blank" style="color:var(--green-mid);font-weight:600;">Assurance &amp; Oversight Functions</a> — ISDC, IAES, SPIA, Audit, Ethics</li><li><a href="https://cgspace.cgiar.org/items/a7d5905d-2f62-4f47-8fdb-6f9a039eeae9" target="_blank" style="color:var(--g2);font-weight:600;">System Council Rules of Procedure</a></li><li><a href="https://storage.googleapis.com/cgiarorg/2023/02/Integration-Framework-Agreement-fully-signed-21Feb2023.pdf" target="_blank" style="color:var(--g2);font-weight:600;">Integration Framework Agreement (IFA)</a> — signed February 2023</li><li><a href="https://cgspace.cgiar.org/items/f5fb41f0-6ea8-4583-b96d-b72a3fc96187" target="_blank" style="color:var(--g2);font-weight:600;">CGIAR 2030 Research and Innovation Strategy</a></li><li><a href="https://cgspace.cgiar.org/bitstreams/f0c61c5b-61c9-4d5f-b8a4-e18e61d8a12c/download" target="_blank" style="color:var(--g2);font-weight:600;">Performance &amp; Results Management Framework 2022–2030</a></li><li><a href="https://storage.googleapis.com/cgiarorg/2023/05/TOR-SC_SIMEC_Revised12May2023.pdf" target="_blank" style="color:var(--g2);font-weight:600;">ToR — SIMEC</a> &nbsp;|&nbsp; <a href="https://www.cgiar.org/cgiar-system-council#Standing+Committees" target="_blank" style="color:var(--g2);font-weight:600;">ToR — AOC &amp; Nominations Committee</a></li></ul>`,
+      "policies":     `Key policies and obligations for System Council members. All policies are published on the <a href="https://www.cgiar.org/how-we-work#Policies+and+Procedures" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Policies & Procedures page</a>.<br><br><a href="https://cgspace.cgiar.org/server/api/core/bitstreams/7789005e-7197-4271-821b-7bef44947897/content" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR System Framework</a> — the foundational instrument governing your role, conduct, and decision-making.<br><br><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113008/CGIAR-Code-of-Conduct-Gov-Officials-Approved-03.11.20.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Conduct for CGIAR Governance Officials</a> — all SC members must abide by this at all times.<br><br><strong>Declaration of Interest</strong> — must be completed before your first meeting and updated as circumstances change. Form shared with your onboarding pack.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Safeguarding.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Safeguarding Policy</a> — zero tolerance of harassment, abuse, and exploitation.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Whistleblowing.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Whistleblowing &amp; Retaliation Protection Policy</a>.<br><br><a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Anti-Harassment.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Anti-Harassment &amp; Discrimination Policy</a>.<br><br><a href="https://cgspace.cgiar.org/bitstream/handle/10568/113007/CGIAR-Ethics-Framework-Sept-2020.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Ethics Framework</a>.<br><br><a href="https://www.cgiar.org/research/publication/framework-for-gender-diversity-and-inclusion-in-cgiars-workplaces/" target="_blank" style="color:var(--green-mid);font-weight:600;">Framework for Gender, Diversity &amp; Inclusion</a>.<br><br><strong>SC Travel Policy</strong> — expense submission process for SC meeting attendance. Shared with your onboarding pack.<br><br><a href="https://www.cgiar.org/ombuds-office" target="_blank" style="color:var(--green-mid);font-weight:600;">Ombuds Office</a> — confidential, informal conflict resolution for all CGIAR stakeholders.`,
+      "practical":    `Practical matters for new System Council members:<br><br><strong>Meeting cycle</strong> — the SC meets at least twice annually; extraordinary meetings may be convened as needed.<br><br><strong>Constituency</strong> — you represent a Funder or developing country constituency agreed every three years. The rules of how your constituency operates are determined by the constituency itself.<br><br><strong>Active Observers</strong> — the SC includes ex-officio non-voting members and Active Observers (including the CGIAR Board Chair representative, ISDC Chair, and SPIA Chair).<br><br><strong>Decision-making</strong> — the SC operates by consensus where possible, with voting procedures defined in the Rules of Procedure.<br><br><strong>Travel &amp; expenses</strong> — follow SC travel procedures; contact the Secretariat for the applicable templates.`,
+      "funding":      `The System Council ensures CGIAR has adequate resources to deliver its strategy:<ul><li>Funders include national governments, multilateral agencies, and leading private foundations</li><li>Up to <strong>15 Funder representatives</strong> sit on the SC; <strong>5 seats</strong> are for developing country representatives (plus up to 4 additional temporary voting members)</li><li>Funder constituencies are reviewed every three years</li><li>The SC oversees programmatic performance and the integrity of use of funds</li><li>The AOC provides assurance to the SC on financial reporting and audit independence</li></ul>`,
+      "centers":      `CGIAR has <strong>13 Research Centers</strong>, each with a specific mandate:<ul><li>Alliance of Bioversity International &amp; CIAT</li><li>CIFOR-ICRAF</li><li>CIMMYT</li><li>CIP (International Potato Center)</li><li>IFPRI</li><li>IITA</li><li>ILRI</li><li>IRRI</li><li>IWMI</li><li>WorldFish</li><li>ICARDA</li></ul>Each Center is an independent legal entity. Together they form the <strong>Integrated Partnership</strong>, united by common values and CGIAR's shared mission.`,
+      "assurance":    `The System Council's assurance and oversight ecosystem:<br><br><strong>AOC</strong> (Assurance Oversight Committee) — the SC's primary assurance body, overseeing audit, risk management, and internal controls.<br><br><strong>ISDC</strong> (Independent Science for Development Council) — scientific quality assurance; ISDC Chair attends SC meetings as an invited representative.<br><br><strong>SPIA</strong> (Standing Panel on Impact Assessment) — assesses research impact; Chair attends SC meetings.<br><br><strong>IAES</strong> (Independent Advisory and Evaluation Service) — independent evaluation function.<br><br><strong>External Auditor</strong> — independent audit of the System Organization's finances.`,
+
+      "term":          `<strong>System Council member terms</strong> are defined in the CGIAR System Framework and the SC Rules of Procedure.<br><br>SC membership is based on constituency representation. Funder constituencies are reviewed every three years. The duration of your specific mandate and any renewal process is governed by your constituency rules and the System Framework.<br><br>Contact the Secretariat or your constituency lead with specific questions.`,
+      "quorum":        `<strong>SC quorum and decision-making:</strong><br><br>The SC operates by consensus where possible. Quorum requirements and voting procedures are set out in the <strong>System Council Rules of Procedure</strong>, shared in your onboarding pack.<br><br>Where a formal vote is required, the Rules specify the required majority. The SC Chair manages meeting conduct and voting procedures.`,
+      "conflict":      `<strong>Conflicts of interest:</strong><br><br>All SC members must complete a Declaration of Interest before their first meeting and update it whenever circumstances change.<br><br>SC members act in the interests of the CGIAR System as a whole — not their employing institution or constituency. If a conflict arises during a meeting, declare it to the SC Chair immediately and recuse yourself from the relevant item if required.<br><br>The <a href="https://cgspace.cgiar.org/bitstream/handle/10568/113008/CGIAR-Code-of-Conduct-Gov-Officials-Approved-03.11.20.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">Code of Conduct for Governance Officials</a> sets out the detailed obligations.`,
+      "meetings":      `<strong>SC meetings:</strong><br><br>The System Council meets at least twice per year, with extraordinary meetings called as needed. The 2026 Governance Calendar is available at <a href="https://cgspace.cgiar.org/bitstreams/7ffa12e8-f16b-4494-b207-7f8d946b97e8/download" target="_blank" style="color:var(--green-mid);font-weight:600;">CGSpace</a>.<br><br>SC meeting papers and documents are circulated in advance. You are expected to review all materials before the meeting and engage substantively. Committee meetings (SIMEC, AOC, Nominations) are scheduled separately.`,
+      "emd":           `<strong>Executive Managing Director (EMD):</strong><br><br>The EMD leads the CGIAR System Management Office and is responsible for day-to-day operations. The EMD attends SC meetings and provides updates on operational and strategic delivery. As an SC member, your relationship with the EMD is through formal SC channels. The Board appoints the EMD; the SC receives performance reports from the EMD.`,
+      "travel":        `<strong>Travel and expenses:</strong><br><br>CGIAR reimburses SC members for reasonable travel expenses incurred in connection with SC and committee meetings, in accordance with the SC Travel Policy. Contact the Secretariat for the expense report template and submission instructions. Submit claims promptly after each meeting.`,
+      "who to contact":  `<strong>Who to contact for what:</strong><br><br><strong>SC Secretariat</strong> — meeting logistics, document access, onboarding queries. Email: <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a><br><br><strong>Finance team</strong> — expense reimbursements, travel claims<br><br><strong>Legal / General Counsel</strong> — Declaration of Interest, conflict of interest advice<br><br><strong>SC Chair</strong> — governance concerns, conflicts to declare, recusal requests<br><br><strong>Ombuds Office</strong> (<a href="https://www.cgiar.org/ombuds-office" target="_blank" style="color:var(--green-mid);font-weight:600;">cgiar.org/ombuds-office</a>) — confidential, informal dispute resolution`,
+      "confidentiality": `<strong>Confidentiality obligations:</strong><br><br>SC deliberations, unpublished documents, personnel matters, and strategic discussions are confidential. You must not share confidential SC information with external parties without authorisation. These obligations continue after your term ends. If in doubt, contact the SC Secretariat.`,
+      "safeguarding":    `<strong>Safeguarding at CGIAR:</strong><br><br>CGIAR has a zero-tolerance policy on sexual misconduct, exploitation, abuse, and human trafficking. The <a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Safeguarding.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Safeguarding Policy</a> applies to all governance officials including SC members. Report concerns to the Secretariat, Ethics function, or Ombuds Office. Retaliation is strictly prohibited.`,
+      "ombuds":          `<strong>The Ombuds Office</strong> provides confidential, impartial, and informal dispute resolution for all CGIAR stakeholders including SC members.<br><br>Visit: <a href="https://www.cgiar.org/ombuds-office" target="_blank" style="color:var(--green-mid);font-weight:600;">cgiar.org/ombuds-office</a>`,
+      "gdi":             `<strong>Gender, Diversity & Inclusion (GDI):</strong><br><br>CGIAR is committed to building diverse and inclusive governance bodies. The <a href="https://www.cgiar.org/research/publication/framework-for-gender-diversity-and-inclusion-in-cgiars-workplaces/" target="_blank" style="color:var(--green-mid);font-weight:600;">GDI Framework</a> sets out CGIAR's commitments. As an SC member, you are expected to uphold and promote these values in SC deliberations.`,
+      "ifa":             `<strong>Integration Framework Agreement (IFA):</strong><br><br>The IFA was signed on 22 February 2023 by all CGIAR Center boards. An independent governance review by Morrow Sodali followed in 2023. Implementation recommendations — including changes to the System Framework and Charter — came into effect on 1 October 2024. As an SC member, the revised System Framework is your primary governing instrument.`,
+      "research":        `<strong>CGIAR's research and innovation portfolio:</strong><br><br><a href="https://cgspace.cgiar.org/items/f5fb41f0-6ea8-4583-b96d-b72a3fc96187" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR 2030 Research and Innovation Strategy</a> — the overarching 10-year strategy covering all research for development programming, organised around three Action Areas: Systems Transformation, Resilient Agrifood Systems, and Genetic Innovation. Targets five Impact Areas: Nutrition &amp; Food Security, Poverty Reduction, Gender Equality, Climate Adaptation, and Environmental Health.<br><br><a href="https://www.cgiar.org/cgiar-research-portfolio-2025-2030" target="_blank" style="color:var(--green-mid);font-weight:600;">2025–2030 Research Portfolio</a> — the current portfolio accelerating delivery of the 2030 Strategy, covering 11 research programmes across all CGIAR Research Centers. As a System Council member, you oversee programmatic performance across all programmes.<br><br><a href="https://www.cgiar.org/research/" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Research overview page</a> — full overview of research areas, impact areas, and action areas.<br><br><a href="https://www.cgiar.org/food-security-impact/results-dashboard" target="_blank" style="color:var(--green-mid);font-weight:600;">Results Dashboard</a> — live portfolio performance and impact data.`,
+      "dashboard":       `<strong>CGIAR dashboards and performance data:</strong><br><br>As an SC member overseeing system performance, key dashboards include:<ul><li><a href="https://www.cgiar.org/food-security-impact/results-dashboard" target="_blank" style="color:var(--green-mid);font-weight:600;">Results Dashboard</a></li><li><a href="https://www.cgiar.org/food-security-impact/finance-reports/dashboard" target="_blank" style="color:var(--green-mid);font-weight:600;">Financial Report Dashboards</a></li><li><a href="https://www.cgiar.org/cgiar-trust-fund-dashboards" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Trust Fund Dashboards</a></li><li><a href="https://www.cgiar.org/cgiar-system-council#Decision+Register" target="_blank" style="color:var(--green-mid);font-weight:600;">SC Decision Register</a></li><li><a href="https://www.cgiar.org/management-response-actions-tracker" target="_blank" style="color:var(--green-mid);font-weight:600;">Evaluation & Management Response Tracker</a></li></ul>`,
+      "calendar":        `<strong>Governance calendar:</strong><br><br>The 2026 CGIAR Governance Calendar sets out all scheduled Board, System Council, committee, and General Assembly meetings. Download from <a href="https://cgspace.cgiar.org/bitstreams/7ffa12e8-f16b-4494-b207-7f8d946b97e8/download" target="_blank" style="color:var(--green-mid);font-weight:600;">CGSpace</a>.`,
+      "whistleblowing":  `<strong>Whistleblowing and raising concerns:</strong><br><br>The <a href="https://storage.googleapis.com/cgiarorg/2023/01/Ethics-Policy-Whistleblowing.pdf" target="_blank" style="color:var(--green-mid);font-weight:600;">CGIAR Whistleblowing Policy</a> encourages reporting of misconduct, financial irregularities, policy breaches, or safeguarding issues. Reporting channels include the Ethics function, Ombuds Office, SC Chair, and a confidential external channel. Retaliation is strictly prohibited.`,
+      "smo":             `<strong>System Management Office (SMO):</strong><br><br>The SMO, headed by the EMD, handles day-to-day operations of the CGIAR System Organization. It supports the SC, Board, and General Assembly, and facilitates integration across the Integrated Partnership. The SMO Secretariat supports your meeting participation and document access.`,
+      "general assembly": `<strong>General Assembly of Centers (GAC):</strong><br><br>The GAC is a forum for CGIAR's 13 Research Centers. Its Co-Chair attends SC meetings as an Active Observer, providing the Centers perspective on system-wide matters. The SC engages with the GAC on strategic priorities and governance matters.`,
+      "observers":       `<strong>Active Observers at SC meetings:</strong><br><br>The System Council includes Active Observers who participate in discussions but do not vote:<ul><li>A representative of the CGIAR Board (IPB Chair or designate)</li><li>ISDC Chair — scientific quality assurance</li><li>SPIA Chair — impact assessment</li><li>GAC Co-Chair — representing the 13 CGIAR Research Centers</li></ul>`,
+      "constituency":    `<strong>Constituencies and representation:</strong><br><br>SC membership is organised by constituency — up to 15 Funder seats and 5 developing country seats (plus up to 4 additional temporary voting members). Constituencies are reviewed every three years. Each constituency determines its own internal rules. Your constituency lead can advise on the specific arrangements.`,
+    }
+  }
+};
+
+let role = 'board', step = 0, msgs = [], mode = 'kb';
+
+function init() {
+  renderSteps(); renderTopics(); renderSugs();
+  if (!msgs.length) {
+    push('a', `👋 Welcome to CGIAR! I'm your induction guide for <strong>${ROLES[role].label}s</strong>.<br><br>Use the <strong>walkthrough</strong> above to go step by step, click a <strong>topic card</strong> to jump anywhere, or <strong>ask me anything</strong> below.<br><br>Switch to <strong>✦ Live search</strong> to query cgiar.org in real time for up-to-date answers.`);
+  }
+}
+
+function setRole(r) {
+  role = r; step = 0; msgs = [];
+  document.getElementById('tab-board').classList.toggle('on', r === 'board');
+  document.getElementById('tab-sc').classList.toggle('on', r === 'sc');
+  document.getElementById('tab-ask').classList.toggle('on', r === 'ask');
+
+  const isAsk = r === 'ask';
+  // Show/hide induction dashboard elements
+  ['wt','topic-section','mode-row'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isAsk ? 'none' : '';
+  });
+
+  if (isAsk) {
+    document.getElementById('wc-title').textContent = 'Ask CGIAR';
+    document.getElementById('wc-desc').textContent = 'Ask anything about CGIAR — governance, research, strategy, centers, policies, or anything on cgiar.org. This chatbot searches the CGIAR website in real time to give you accurate, up-to-date answers.';
+    document.getElementById('msgs').innerHTML = '';
+    document.getElementById('sugs').innerHTML = [
+      'What is the CGIAR 2030 strategy?',
+      'Who are the CGIAR Research Centers?',
+      'What are CGIAR impact areas?',
+      'How is CGIAR funded?',
+      'What is the Integration Framework Agreement?',
+    ].map(s => `<button class="sug" onclick="askSug('${s}')">${s}</button>`).join('');
+    document.getElementById('inp').placeholder = 'Ask anything about CGIAR…';
+    msgs = [];
+    push('a', `✦ <strong>Welcome to Ask CGIAR</strong><br><br>I search <a href="https://cgiar.org" target="_blank" style="color:var(--g2);font-weight:600;">cgiar.org</a> in real time to answer your questions. Ask me anything about CGIAR's mission, governance, research, policies, centers, strategy, or any other topic.<br><br>What would you like to know?`);
+  } else {
+    document.getElementById('msgs').innerHTML = '';
+    document.getElementById('wc-title').textContent = ROLES[r].welcome;
+    document.getElementById('wc-desc').textContent = ROLES[r].desc;
+    init();
+  }
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('mbtn-kb').classList.toggle('on', m === 'kb');
+  document.getElementById('mbtn-ai').classList.toggle('on', m === 'ai');
+  document.getElementById('live-row').style.display = m === 'ai' ? 'flex' : 'none';
+  document.getElementById('inp').placeholder = m === 'ai'
+    ? 'Ask anything — searching cgiar.org in real time…'
+    : 'Ask anything about CGIAR, your role, governance, documents…';
+}
+
+function renderSteps() {
+  const steps = ROLES[role].steps;
+  document.getElementById('wt-steps').innerHTML = steps.map((s, i) => {
+    const c = i < step ? 'pill done' : i === step ? 'pill cur' : 'pill next';
+    return `<div class="${c}" onclick="goStep(${i})">${s}</div>`;
+  }).join('');
+  const pct = Math.round(((step + 1) / steps.length) * 100);
+  document.getElementById('pb-fill').style.width = pct + '%';
+  document.getElementById('pb-lbl').textContent = `${step + 1} / ${steps.length}`;
+}
+
+function goStep(idx) {
+  step = idx; renderSteps();
+  const s = ROLES[role].steps[idx];
+  push('u', `Tell me about: ${s}`);
+  typing(() => {
+    const steps = ROLES[role].steps;
+    const nxt = idx < steps.length - 1
+      ? `<br><br><em>Next: <strong>${steps[idx+1]}</strong> — click above or keep asking.</em>`
+      : `<br><br><em>🎉 Walkthrough complete! Ask any follow-up questions below.</em>`;
+    push('a', findKb(s.toLowerCase()) + nxt);
+    step = Math.min(idx + 1, steps.length - 1); renderSteps();
+  });
+}
+
+function renderTopics() {
+  document.getElementById('topic-grid').innerHTML = ROLES[role].topics.map(t =>
+    `<div class="topic" onclick="askTopic('${t.name}')">
+      <div class="t-icon">${t.icon}</div>
+      <div class="t-name">${t.name}</div>
+      <div class="t-desc">${t.desc}</div>
+    </div>`).join('');
+}
+
+function askTopic(name) {
+  push('u', name);
+  if (mode === 'ai') { liveSearch(name); return; }
+  typing(() => push('a', findKb(name.toLowerCase())));
+}
+
+function renderSugs() {
+  const all = ROLES[role].suggestions;
+  const vis = all.slice(0, 3);
+  const hid = all.slice(3);
+  let h = vis.map(s => `<button class="sug" onclick="askSug('${s}')">${s}</button>`).join('');
+  if (hid.length) {
+    h += `<button class="sug" id="more-btn" onclick="showMore()" style="background:transparent;border-color:var(--g1);color:var(--g1)">+ ${hid.length} more…</button>`;
+    h += hid.map(s => `<button class="sug sug-h" style="display:none" onclick="askSug('${s}')">${s}</button>`).join('');
+  }
+  document.getElementById('sugs').innerHTML = h;
+}
+
+function showMore() {
+  document.querySelectorAll('.sug-h').forEach(b => b.style.display = '');
+  const b = document.getElementById('more-btn'); if (b) b.remove();
+}
+
+function askSug(q) {
+  push('u', q);
+  if (mode === 'ai' || role === 'ask') { liveSearch(q); return; }
+  typing(() => push('a', findKb(q.toLowerCase())));
+}
+
+function send() {
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim(); if (!txt) return;
+  inp.value = ''; push('u', txt);
+  if (mode === 'ai' || role === 'ask') { liveSearch(txt); return; }
+  typing(() => push('a', findKb(txt.toLowerCase())));
+}
+
+async function liveSearch(q) {
+  const el = document.getElementById('msgs');
+  const div = document.createElement('div');
+  div.className = 'msg a'; div.id = 'typ-div';
+  div.innerHTML = `<div class="av">🌿</div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div><div style="font-size:10px;color:var(--muted);margin-top:4px">Searching cgiar.org…</div></div>`;
+  el.appendChild(div); el.scrollTop = el.scrollHeight;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: role === 'ask'
+          ? `You are the CGIAR information assistant. Search cgiar.org to answer questions accurately and concisely. Always cite the specific pages you found. Cover any topic related to CGIAR — mission, governance, research, centers, strategy, funding, policies, publications, or impact. If you cannot find something on cgiar.org, say so clearly.`
+          : `You are the CGIAR Induction Guide helping a new ${ROLES[role].label}. Search cgiar.org to find accurate answers. Be concise, welcoming, and cite sources. Key links: Diligent login director.diligentboards.com, policies cgiar.org/how-we-work, ombuds cgiar.org/ombuds-office. Never share personal member data or guess on governance matters.`,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: q }]
+      })
+    });
+
+    div.remove();
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+
+    let text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    text = text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+
+    push('a', text + `<div style="margin-top:6px;font-size:10px;color:var(--muted)">✦ Sourced from cgiar.org via live search</div>`);
+  } catch(e) {
+    div.remove();
+    push('a', `<div class="err">⚠ Could not reach cgiar.org right now. Try the 📚 Knowledge base mode, or contact the Board Secretariat at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a>.</div>`);
+  }
+}
+
+function findKb(q) {
+  const kb = ROLES[role].kb;
+  for (const k of Object.keys(kb)) if (q.includes(k)) return kb[k];
+  const map = {
+    "mission":["mission","vision","2030","impact area","what does cgiar","purpose","food"],
+    "governance":["governance","structure","how is cgiar","who runs","three bod","emd overview"],
+    "board role":["board role","my role","responsibilit","duties","fiduciary","what am i","what do i"],
+    "sc role":["sc role","council role","strategic oversight","funder representative"],
+    "committees":["committee","siip","afrc","rmsca","gpc","steering","simec","aoc","nominations"],
+    "documents":["document","charter","handbook","framework","rules of procedure","where can i find"],
+    "policies":["polic","code of conduct","safeguarding","whistleblow","declaration of interest","harassment"],
+    "diligent help":["diligent","log in","login","portal","sign in","board portal"],
+    "cgiar email":["email","cgiar email","my email"],
+    "honorarium":["honorarium","pay","payment","remuneration","compensation"],
+    "travel":["travel","expense","claim","reimburse","flight","hotel"],
+    "insurance":["insurance","aiarc","d&o","coverage"],
+    "conflict":["conflict of interest","coi","declaration","declare","recuse"],
+    "confidentiality":["confidential","disclose","disclosure"],
+    "meetings":["meeting","how often","agenda","board paper","next meeting","schedule"],
+    "emd":["emd","executive managing director","who leads"],
+    "smo":["smo","system management office","who supports"],
+    "term":["term","appointment","how long","tenure","renewal"],
+    "quorum":["quorum","vote","voting","decision","majority"],
+    "who to contact":["who do i contact","contact","help","support","problem","issue"],
+    "calendar":["calendar","dates","governance calendar","2026"],
+    "ifa":["ifa","integration framework","morrow sodali","reform"],
+    "research":["research","portfolio","programme","2025","science","innovation"],
+    "dashboard":["dashboard","performance","results","finance report","decision register"],
+    "ombuds":["ombuds","dispute","complaint","confidential help"],
+    "whistleblowing":["whistleblow","misconduct","fraud","irregularity"],
+    "resno":["resno","system access","id number"],
+    "general assembly":["general assembly","gac"],
+    "observers":["observer","active observer","non-voting"],
+    "constituency":["constituency","represent","funder group","developing country"],
+    "centers":["center","centre","13","cimmyt","irri","iita","ifpri","worldfish","icarda"],
+    "assurance":["assurance","audit","isdc","iaes","spia","oversight"],
+    "funding":["funding","funder","resource","trust fund","mobilisation"],
+    "gdi":["gdi","gender","diversity","inclusion","equity"],
+  };
+  for (const [k, kws] of Object.entries(map)) {
+    if (kws.some(kw => q.includes(kw)) && kb[k]) return kb[k];
+  }
+  return `I couldn't find a specific answer for <strong>"${q}"</strong> in the knowledge base.<br><br>💡 Try switching to <strong>✦ Live search</strong> above to search cgiar.org in real time, or contact the <strong>Board Secretariat</strong> directly at <a href="mailto:cgiar-board-secretariat@cgiar.org" style="color:var(--g2);font-weight:600;">cgiar-board-secretariat@cgiar.org</a>.`;
+}
+
+function push(r, t) { msgs.push({r, t}); render(); }
+function render() {
+  const el = document.getElementById('msgs');
+  el.innerHTML = msgs.map(m =>
+    `<div class="msg ${m.r}"><div class="av">${m.r==='a'?'🌿':'👤'}</div><div class="bbl">${m.t}</div></div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+function typing(cb) {
+  const el = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'msg a'; d.id = 'typ-div';
+  d.innerHTML = `<div class="av">🌿</div><div class="bbl"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+  setTimeout(() => { d.remove(); cb(); }, 600 + Math.random()*300);
+}
+
+init();
+</script>
+</body>
+</html>
